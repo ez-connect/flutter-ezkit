@@ -1,7 +1,7 @@
-name: dynamic_routing
-description: A new Flutter package project.
+name: ezkit
+description: A collection of usefull things, including routing, util and widgets for Flutter applications
 version: 0.0.1
-homepage: https://pub.dev/packages/dynamic_routing
+homepage: https://pub.dev/packages/ezkit
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -10,6 +10,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # For DateTime format, ...
+  intl: ^0.16.1
+
+  # Network
+  http: ^0.12.2
+  connectivity: ^0.4.9
+  
+  # Local storage
+  localstorage: ^3.0.2
+  # secure storage
+  flutter_secure_storage: ^3.3.3
 
 dev_dependencies:
   flutter_test:
