@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DynamicRoute {
   static var _routesMapping = Map<DynamicRoute, Widget Function(dynamic)>();
-  String route;
+  final String route;
   final _variable = Map<String, String>(); // <name, type>
   RegExp _regex;
 
@@ -51,7 +51,7 @@ class DynamicRoute {
     final uri = Uri.parse(route);
     var name = uri.path;
     var arguments = args;
-    if (route == this.route) {
+    if (name == this.route) {
       if (args is Map<String, dynamic>) {
         args.forEach((key, value) {
           name = name.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
