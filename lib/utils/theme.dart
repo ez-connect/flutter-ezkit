@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../routing/navigation.dart';
+import 'navigation.dart';
 
 class ThemeEx {
   static ThemeData get theme {
@@ -15,11 +15,19 @@ class ThemeEx {
     return MediaQuery.of(Navigation.currentContext).size;
   }
 
-  static int getColorFromHex(String value) {
+  static Color hex2Color(String value) {
+    if (value == null) return null;
+
     value = value.toUpperCase().replaceAll("#", "");
     if (value.length == 6) {
       value = "FF" + value;
     }
-    return int.parse(value, radix: 16);
+
+    try {
+      final color = int.parse(value, radix: 16);
+      return Color(color);
+    } catch (err) {
+      return null;
+    }
   }
 }
