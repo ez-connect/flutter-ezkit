@@ -2,20 +2,37 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ezkit/ezkit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
+import '../ezkit.dart';
 import 'logger.dart';
 
-const kHttpMethodHead = 'HEAD';
-const kHttpMethodGet = 'GET';
-const kHttpMethodPost = 'POST';
-const kHttpMethodPut = 'PUT';
-const kHttpMethodDelete = 'DELETE';
+enum RestMethod { head, get, post, put, delete }
+typedef _Request(
+  String url, {
+  Map<String, String> headers,
+  dynamic body,
+});
+
+final List<_Request> _restMethod = [
+  (url, {headers, body}) => http.head(url, headers: headers),
+  (url, {headers, body}) => http.get(url, headers: headers),
+  http.post,
+  http.put,
+  (url, {headers, body}) => http.delete(url, headers: headers),
+];
+
+typedef Future<bool> RestErrorCallbackHandler(
+  RestError restException,
+  int retryCount,
+);
+
+final kContentTypeJson = 'application/json';
 
 class Rest {
   static String _baseURL;
   static Map<String, String> _auth;
+  static Map<String, String> _defaultHeaders;
   static bool _forceUTF8;
   static bool _loggerEnabled = true;
 
@@ -27,10 +44,17 @@ class Rest {
   /// Authorazation header
   static set auth(Map<String, String> value) => _auth = value;
 
+  /// Default headers
+  static set defaultHeaders(Map<String, String> value) =>
+      _defaultHeaders = value;
+
   /// Validate status code
   static set validateStatus(Function(int statusCode) value) {
     _validateStatus = value;
   }
+
+  /// handler for rest error
+  static RestErrorCallbackHandler _errorCallbackHandler;
 
   /// In case webserver's Content-Type not include charset utf-8
   /// but the content has utf-8 chars
@@ -39,40 +63,42 @@ class Rest {
   /// Logging requests, enabled by default
   static set loggerEnabled(bool value) => _loggerEnabled = value;
 
-  static Future<dynamic> request(
-    String method,
+  static Future<dynamic> _request(
+    RestMethod method,
     String path, {
     Map<String, String> headers,
-    Map<String, String> params,
+    // Map<String, String> params,
     dynamic body,
+    bool useAuth = false,
+    int retryCount = 0,
   }) async {
+    // update path
+    if (_baseURL != null &&
+        path.startsWith(RegExp(r'http(.|):\/\/')) == false) {
+      path = _baseURL + path;
+    }
+
     // Update headers: content-type + auth
-    headers = headers ?? {'Content-type': 'application/json'};
-    if (_auth != null) {
+    headers = {'Content-type': kContentTypeJson}
+      ..addAll(_defaultHeaders ?? {})
+      ..addAll(headers ?? {});
+    if (_auth != null && useAuth) {
       headers.addAll(_auth);
     }
 
-    String url = _baseURL + path;
-    http.Response res;
-
     if (_loggerEnabled) Logger.debug('$method $path');
-    switch (method) {
-      case kHttpMethodHead:
-        res = await http.head(url, headers: headers);
-        break;
-      case kHttpMethodGet:
-        res = await http.get(url, headers: headers);
-        break;
-      case kHttpMethodPost:
-        res = await http.post(url, headers: headers, body: jsonEncode(body));
-        break;
-      case kHttpMethodPut:
-        res = await http.put(url, headers: headers, body: jsonEncode(body));
-        break;
-      case kHttpMethodDelete:
-        res = await http.delete(url, headers: headers);
-        break;
+
+    // convert body by json or something else
+    if (body is Map<String, dynamic> &&
+        headers['Content-type'] == kContentTypeJson) {
+      body = jsonEncode(body);
     }
+
+    final http.Response res = await _restMethod[method.index](
+      path,
+      headers: headers,
+      body: body,
+    );
 
     final statusCode = res.statusCode;
     bool ok = false;
@@ -83,46 +109,71 @@ class Rest {
       ok = statusCode == HttpStatus.ok || statusCode == HttpStatus.created;
     }
 
+    dynamic retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
+    retBody = res.headers['content-type'] == kContentTypeJson
+        ? jsonDecode(retBody)
+        : retBody;
     if (ok) {
-      return _forceUTF8 == true
-          ? jsonDecode(utf8.decode(res.bodyBytes))
-          : jsonDecode(res.body);
+      return retBody;
     }
 
     if (_loggerEnabled) Logger.warn(res.body);
-    throw ErrorDescription(RestError(
-      statusCode,
-      _forceUTF8 == true
-          ? jsonDecode(utf8.decode(res.bodyBytes))
-          : jsonDecode(res.body),
-    ).toString());
+    final error = RestError(
+      res.statusCode,
+      retBody,
+    );
+    if (_errorCallbackHandler != null) {
+      try {
+        // need request again or not?
+        if (await _errorCallbackHandler(error, retryCount)) {
+          return Rest._request(method, path,
+              headers: headers,
+              body: body,
+              useAuth: useAuth,
+              retryCount: ++retryCount);
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+    throw error;
+  }
+
+  static Future<dynamic> request(RestMethod method, String path,
+      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+    _request(method, path, headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> head(String path,
-      {Map<String, String> headers}) async {
-    return request(kHttpMethodHead, path, headers: headers);
+      {Map<String, String> headers, bool useAuth = false}) async {
+    return _request(RestMethod.head, path, headers: headers, useAuth: useAuth);
   }
 
   static Future<dynamic> get(String path,
-      {Map<String, String> params, Map<String, String> headers}) async {
+      {Map<String, String> params,
+      Map<String, String> headers,
+      bool useAuth = false}) async {
     if (params != null) {
       path += '?' + Uri(queryParameters: params).query;
     }
-    return request(kHttpMethodGet, path, headers: headers);
+    return _request(RestMethod.get, path, headers: headers, useAuth: useAuth);
   }
 
   static Future<dynamic> post(String path,
-      {Map<String, String> headers, dynamic body}) async {
-    return request(kHttpMethodPost, path, headers: headers, body: body);
+      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+    return _request(RestMethod.post, path,
+        headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> put(String path,
-      {Map<String, String> headers, dynamic body}) async {
-    return request('PUT', path, headers: headers, body: body);
+      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+    return _request(RestMethod.put, path,
+        headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> delete(String path,
-      {Map<String, String> headers, dynamic body}) async {
-    return request('DELETE', path, headers: headers);
+      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+    return _request(RestMethod.delete, path,
+        headers: headers, useAuth: useAuth);
   }
 }

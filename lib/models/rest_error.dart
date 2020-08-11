@@ -5,7 +5,7 @@ import 'dart:convert';
 /// default `statusCode == 200 || statusCode == 202`
 class RestError {
   int statusCode;
-  String body;
+  dynamic body;
 
   RestError(this.statusCode, this.body);
 
