@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'navigation.dart';
+import 'package:ezkit/routing.dart';
 
 class ThemeEx {
   static ThemeData get theme {

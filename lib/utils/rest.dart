@@ -14,26 +14,31 @@ const kHttpMethodPut = 'PUT';
 const kHttpMethodDelete = 'DELETE';
 
 class Rest {
-  static String _baseUrl;
-  static String _token;
+  static String _baseURL;
+  static Map<String, String> _auth;
+  static bool _forceUTF8;
+  static bool _loggerEnabled = true;
 
   static bool Function(int statusCode) _validateStatus;
 
-  static void setBaseUrl(String value) {
-    _baseUrl = value;
-  }
+  /// Base URL for request
+  static set baseURL(String value) => _baseURL = value;
 
-  static void setToken(String value) {
-    if (_token != value) {
-      _token = value;
-    }
-  }
+  /// Authorazation header
+  static set auth(Map<String, String> value) => _auth = value;
 
-  static void setValidateStatus(Function(int statusCode) value) {
+  /// Validate status code
+  static set validateStatus(Function(int statusCode) value) {
     _validateStatus = value;
   }
 
-  // TODO: Use http.HttpClientRequest for better
+  /// In case webserver's Content-Type not include charset utf-8
+  /// but the content has utf-8 chars
+  static set forceUTF8(bool value) => _forceUTF8 = value;
+
+  /// Logging requests, enabled by default
+  static set loggerEnabled(bool value) => _loggerEnabled = value;
+
   static Future<dynamic> request(
     String method,
     String path, {
@@ -42,14 +47,15 @@ class Rest {
     dynamic body,
   }) async {
     // Update headers: content-type + auth
-    headers = headers ?? {'Content-type': 'application/json;charset=utf-8'};
-    if (_token != null) {
-      headers.addAll({'Private-Token': _token});
+    headers = headers ?? {'Content-type': 'application/json'};
+    if (_auth != null) {
+      headers.addAll(_auth);
     }
 
-    String url = _baseUrl + path;
-    Logger.debug('$method $path');
+    String url = _baseURL + path;
     http.Response res;
+
+    if (_loggerEnabled) Logger.debug('$method $path');
     switch (method) {
       case kHttpMethodHead:
         res = await http.head(url, headers: headers);
@@ -69,29 +75,27 @@ class Rest {
     }
 
     final statusCode = res.statusCode;
-    body = jsonDecode(utf8.decode(res.bodyBytes));
+    bool ok = false;
+
     if (_validateStatus != null) {
-      if (_validateStatus(res.statusCode)) {
-        return body;
-      }
-
-      throw ErrorDescription(body);
-    }
-
-    bool hasError = false;
-    if (_validateStatus != null) {
-      hasError = _validateStatus(statusCode);
+      ok = _validateStatus(statusCode);
     } else {
-      hasError = res.statusCode == HttpStatus.ok ||
-          res.statusCode == HttpStatus.created;
+      ok = statusCode == HttpStatus.ok || statusCode == HttpStatus.created;
     }
 
-    if (!hasError) {
-      return jsonDecode(body);
-    } else {
-      Logger.warn(res.body);
-      throw ErrorDescription(RestError(statusCode, body).toString());
+    if (ok) {
+      return _forceUTF8 == true
+          ? jsonDecode(utf8.decode(res.bodyBytes))
+          : jsonDecode(res.body);
     }
+
+    if (_loggerEnabled) Logger.warn(res.body);
+    throw ErrorDescription(RestError(
+      statusCode,
+      _forceUTF8 == true
+          ? jsonDecode(utf8.decode(res.bodyBytes))
+          : jsonDecode(res.body),
+    ).toString());
   }
 
   static Future<dynamic> head(String path,
