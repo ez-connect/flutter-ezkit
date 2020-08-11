@@ -140,19 +140,19 @@ class Rest {
   }
 
   static Future<dynamic> request(RestMethod method, String path,
-      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+      {Map<String, String> headers, dynamic body, bool useAuth = true}) async {
     _request(method, path, headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> head(String path,
-      {Map<String, String> headers, bool useAuth = false}) async {
+      {Map<String, String> headers, bool useAuth = true}) async {
     return _request(RestMethod.head, path, headers: headers, useAuth: useAuth);
   }
 
   static Future<dynamic> get(String path,
       {Map<String, String> params,
       Map<String, String> headers,
-      bool useAuth = false}) async {
+      bool useAuth = true}) async {
     if (params != null) {
       path += '?' + Uri(queryParameters: params).query;
     }
@@ -160,19 +160,19 @@ class Rest {
   }
 
   static Future<dynamic> post(String path,
-      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+      {Map<String, String> headers, dynamic body, bool useAuth = true}) async {
     return _request(RestMethod.post, path,
         headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> put(String path,
-      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+      {Map<String, String> headers, dynamic body, bool useAuth = true}) async {
     return _request(RestMethod.put, path,
         headers: headers, body: body, useAuth: useAuth);
   }
 
   static Future<dynamic> delete(String path,
-      {Map<String, String> headers, dynamic body, bool useAuth = false}) async {
+      {Map<String, String> headers, dynamic body, bool useAuth = true}) async {
     return _request(RestMethod.delete, path,
         headers: headers, useAuth: useAuth);
   }
