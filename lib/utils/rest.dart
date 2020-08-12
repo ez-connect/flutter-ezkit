@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:ezkit/ezkit.dart';
 import 'package:http/http.dart' as http;
 
-import '../ezkit.dart';
 import 'logger.dart';
 
 enum RestMethod { head, get, post, put, delete }
