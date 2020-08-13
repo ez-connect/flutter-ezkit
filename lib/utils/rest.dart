@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'logger.dart';
 
-enum RestMethod { head, get, post, put, delete }
+enum RestMethod { head, get, post, put, delete, upload }
 typedef _Request(
   String url, {
   Map<String, String> headers,
@@ -19,6 +19,7 @@ final List<_Request> _restMethod = [
   http.post,
   http.put,
   (url, {headers, body}) => http.delete(url, headers: headers),
+  (url, {headers, body}) => Rest._upload(url, body, headers: headers),
 ];
 
 typedef Future<bool> RestErrorCallbackHandler(
@@ -93,7 +94,7 @@ class Rest {
       body = jsonEncode(body);
     }
 
-    final http.Response res = await _restMethod[method.index](
+    final res = await _restMethod[method.index](
       path,
       headers: headers,
       body: body,
@@ -108,10 +109,19 @@ class Rest {
       ok = statusCode == HttpStatus.ok || statusCode == HttpStatus.created;
     }
 
-    dynamic retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
+    dynamic retBody;
+
+    if (res is http.StreamedResponse) {
+      final data = await res.stream.toBytes();
+      retBody = String.fromCharCodes(data);
+    } else {
+      retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
+    }
+
     retBody = res.headers['content-type'] == kContentTypeJson
         ? jsonDecode(retBody)
         : retBody;
+
     if (ok) {
       return retBody;
     }
@@ -174,5 +184,26 @@ class Rest {
       {Map<String, String> headers, dynamic body, bool useAuth = true}) async {
     return _request(RestMethod.delete, path,
         headers: headers, useAuth: useAuth);
+  }
+
+  static Future<http.StreamedResponse> _upload(String path, File file,
+      {Map<String, String> headers}) async {
+    final fileName = file.path.split('/').last;
+    Uri uri = Uri.parse(path);
+    final fileContent = await http.MultipartFile.fromPath(
+      'file',
+      file.path,
+      filename: fileName,
+    );
+    final request = http.MultipartRequest('POST', uri);
+    request.files.add(fileContent);
+    final res = await request.send();
+    return res;
+  }
+
+  static Future<dynamic> upload(String path, File file,
+      {Map<String, String> headers, bool useAuth = true}) async {
+    return _request(RestMethod.upload, path,
+        headers: headers, body: file, useAuth: useAuth);
   }
 }
