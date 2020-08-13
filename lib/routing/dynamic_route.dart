@@ -47,22 +47,20 @@ class DynamicRoute {
   }
 
   RouteSettings getSetting(String route, Object args) {
+    if (args is Map<String, dynamic> == false) {
+      return RouteSettings(name: route, arguments: args);
+    }
+
     // need rename
     final uri = Uri.parse(route);
     var name = uri.path;
-    var arguments = args;
+    final arguments = Map<String, dynamic>()..addAll(args);
     if (name == this.route) {
-      if (args is Map<String, dynamic>) {
-        args.forEach((key, value) {
-          name = name.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
-        });
-      }
+      arguments.forEach((key, value) {
+        name = name.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
+      });
     }
-    if (args is Map<String, dynamic>) {
-      arguments = args..addAll(_getArguments(route));
-    } else if (args == null) {
-      arguments = _getArguments(route);
-    }
+    arguments.addAll(_getArguments(route));
     return RouteSettings(name: name, arguments: arguments);
   }
 
