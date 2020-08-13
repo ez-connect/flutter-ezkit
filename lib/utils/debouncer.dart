@@ -9,7 +9,7 @@ class Debouncer {
 
   Timer _timer;
 
-  Debouncer({this.duration});
+  Debouncer([this.duration = const Duration(milliseconds: 500)]);
 
   void run(void Function() callback) {
     _timer?.cancel();
