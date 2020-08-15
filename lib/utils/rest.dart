@@ -186,22 +186,31 @@ class Rest {
         headers: headers, useAuth: useAuth);
   }
 
-  static Future<http.StreamedResponse> _upload(String path, File file,
+  static Future<http.StreamedResponse> _upload(String path, FileInfo file,
       {Map<String, String> headers}) async {
-    final fileName = file.path.split('/').last;
+    assert(file.content != null || file.path != null);
     Uri uri = Uri.parse(path);
-    final fileContent = await http.MultipartFile.fromPath(
-      'file',
-      file.path,
-      filename: fileName,
-    );
+    http.MultipartFile fileContent;
+    if (file.content != null) {
+      fileContent = http.MultipartFile.fromBytes(
+        'file',
+        file.content,
+        filename: file.name,
+      );
+    } else {
+      fileContent = await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+        filename: file.name,
+      );
+    }
     final request = http.MultipartRequest('POST', uri);
     request.files.add(fileContent);
     final res = await request.send();
     return res;
   }
 
-  static Future<dynamic> upload(String path, File file,
+  static Future<dynamic> upload(String path, FileInfo file,
       {Map<String, String> headers, bool useAuth = true}) async {
     return _request(RestMethod.upload, path,
         headers: headers, body: file, useAuth: useAuth);
