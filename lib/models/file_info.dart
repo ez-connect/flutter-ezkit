@@ -1,5 +1,3 @@
-import 'package:ezkit/ezkit.dart';
-
 class FileInfo {
   String path;
   String name;
