@@ -24,6 +24,10 @@ dependencies:
   # secure storage
   flutter_secure_storage: ^3.3.3
 
+  # file picker
+  file_picker: ^1.13.3
+  file_picker_web: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
