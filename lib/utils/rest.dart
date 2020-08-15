@@ -206,6 +206,7 @@ class Rest {
     }
     final request = http.MultipartRequest('POST', uri);
     request.files.add(fileContent);
+    request.headers.addAll(headers ?? {});
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
     final res = await request.send();
     return res;
