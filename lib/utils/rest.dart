@@ -112,7 +112,7 @@ class Rest {
     dynamic retBody;
 
     if (res is http.StreamedResponse) {
-      final data = await res.stream.toBytes();
+      final data = await res.stream?.toBytes();
       retBody = String.fromCharCodes(data);
     } else {
       retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
@@ -206,6 +206,7 @@ class Rest {
     }
     final request = http.MultipartRequest('POST', uri);
     request.files.add(fileContent);
+    request.headers.addAll({'Content-Type': 'multipart/form-data'});
     final res = await request.send();
     return res;
   }
