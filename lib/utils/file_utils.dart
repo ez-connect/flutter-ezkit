@@ -1,7 +1,7 @@
 import '../ezkit.dart';
 
 class FileUtils {
-  static FileInfo picker() {
+  static Future<FileInfo> picker() {
     throw 'Platform Not Supported';
   }
 }
