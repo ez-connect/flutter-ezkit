@@ -3,5 +3,5 @@ class FileInfo {
   String name;
   List<int> content;
 
-  FileInfo(name, {String path, List<int> content});
+  FileInfo(this.name, {this.path, this.content});
 }
