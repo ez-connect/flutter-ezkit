@@ -20,6 +20,16 @@ class Navigation {
     return navigator.currentState.pushNamed<T>(routeName, arguments: arguments);
   }
 
+  @optionalTypeArgs
+  static Future<T> pushReplacementNamed<T extends Object, TO extends Object>(
+    String routeName, {
+    TO result,
+    Object arguments,
+  }) {
+    return navigator.currentState.pushReplacementNamed<T, TO>(routeName,
+        result: result, arguments: arguments);
+  }
+
   static Future<void> pushNamedAndRemoveUntil(
     String newRouteName,
     RoutePredicate predicate, {

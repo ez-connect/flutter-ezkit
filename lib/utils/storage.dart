@@ -6,7 +6,7 @@ class Storage {
   static LocalStorage _storage;
 
   static Future<void> init([String filename = _kFilename]) async {
-    _storage = LocalStorage(_kFilename);
+    _storage = LocalStorage(filename);
     await _storage.ready;
   }
 

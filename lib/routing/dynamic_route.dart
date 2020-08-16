@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 class DynamicRoute {
   static var _routesMapping = Map<DynamicRoute, Widget Function(dynamic)>();
   final String route;
@@ -79,6 +81,7 @@ class DynamicRoute {
   }
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    Logger.info('Generate route: ${settings.name}');
     final arguments = settings.arguments;
     final route = findRoute(settings.name);
 
