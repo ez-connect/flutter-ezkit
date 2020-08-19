@@ -19,12 +19,30 @@ class Formatter {
     return formatter.format(value);
   }
 
+  static String number(double value) {
+    if (value == null) {
+      value = 0;
+    }
+
+    final formatter = NumberFormat.currency(locale: 'vi_VN');
+    return formatter.format(value.round());
+  }
+
   static String date(DateTime date) {
     if (date == null) {
       return '';
     }
 
     final formatter = DateFormat('dd/MM/yyyy', 'vi_VN');
+    return formatter.format(date);
+  }
+
+  static String time(DateTime date) {
+    if (date == null) {
+      return '';
+    }
+
+    final formatter = DateFormat('hh:mm:ss', 'vi_VN');
     return formatter.format(date);
   }
 

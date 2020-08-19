@@ -38,6 +38,9 @@ class Rest {
 
   static bool Function(int statusCode) _validateStatus;
 
+  /// Handler for rest error
+  static RestErrorCallbackHandler _errorCallback;
+
   /// Base URL for request
   static set baseURL(String value) => _baseURL = value;
 
@@ -48,20 +51,21 @@ class Rest {
   static set defaultHeaders(Map<String, String> value) =>
       _defaultHeaders = value;
 
-  /// Validate status code
-  static set validateStatus(Function(int statusCode) value) {
-    _validateStatus = value;
-  }
-
-  /// handler for rest error
-  static RestErrorCallbackHandler _errorCallbackHandler;
-
   /// In case webserver's Content-Type not include charset utf-8
   /// but the content has utf-8 chars
   static set forceUTF8(bool value) => _forceUTF8 = value;
 
   /// Logging requests, enabled by default
   static set loggerEnabled(bool value) => _loggerEnabled = value;
+
+  /// Validate status code
+  static set validateStatus(Function(int statusCode) value) {
+    _validateStatus = value;
+  }
+
+  static set errorCallback(RestErrorCallbackHandler value) {
+    _errorCallback = value;
+  }
 
   static Future<dynamic> _request(
     RestMethod method,
@@ -131,10 +135,10 @@ class Rest {
       res.statusCode,
       retBody,
     );
-    if (_errorCallbackHandler != null) {
+    if (_errorCallback != null) {
       try {
         // need request again or not?
-        if (await _errorCallbackHandler(error, retryCount)) {
+        if (await _errorCallback(error, retryCount)) {
           return Rest._request(method, path,
               headers: headers,
               body: body,
