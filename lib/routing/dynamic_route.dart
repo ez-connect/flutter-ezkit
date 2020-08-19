@@ -55,9 +55,9 @@ class DynamicRoute {
 
     // need rename
     final uri = Uri.parse(route);
-    var name = uri.path;
+    var name = route;
     final arguments = Map<String, dynamic>()..addAll(args ?? {});
-    if (name == this.route) {
+    if (uri.path == this.route) {
       arguments.forEach((key, value) {
         name = name.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
       });
