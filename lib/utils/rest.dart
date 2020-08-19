@@ -33,7 +33,7 @@ class Rest {
   static String _baseURL;
   static Map<String, String> _auth;
   static Map<String, String> _defaultHeaders;
-  static bool _forceUTF8;
+  static bool _forceUTF8 = false;
   static bool _loggerEnabled = true;
 
   static bool Function(int statusCode) _validateStatus;
@@ -90,7 +90,7 @@ class Rest {
       headers.addAll(_auth);
     }
 
-    if (_loggerEnabled) Logger.debug('$method $path');
+    if (_loggerEnabled == true) Logger.debug('$method $path');
 
     // convert body by json or something else
     if (body is Map<String, dynamic> &&
@@ -119,7 +119,7 @@ class Rest {
       final data = await res.stream?.toBytes();
       retBody = String.fromCharCodes(data);
     } else {
-      retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
+      retBody = _forceUTF8 == true ? utf8.decode(res.bodyBytes) : res.body;
     }
 
     retBody = res.headers['content-type'] == kContentTypeJson
