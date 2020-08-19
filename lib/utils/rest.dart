@@ -27,7 +27,8 @@ typedef Future<bool> RestErrorCallbackHandler(
   int retryCount,
 );
 
-final kContentTypeJson = 'application/json';
+const _kContentType = 'content-type';
+const _kContentTypeJson = 'application/json';
 
 class Rest {
   static String _baseURL;
@@ -83,7 +84,7 @@ class Rest {
     }
 
     // Update headers: content-type + auth
-    headers = {'Content-type': kContentTypeJson}
+    headers = {_kContentType: _kContentTypeJson}
       ..addAll(_defaultHeaders ?? {})
       ..addAll(headers ?? {});
     if (_auth != null && useAuth) {
@@ -94,7 +95,7 @@ class Rest {
 
     // convert body by json or something else
     if (body is Map<String, dynamic> &&
-        headers['Content-type'] == kContentTypeJson) {
+        headers[_kContentType] == _kContentTypeJson) {
       body = jsonEncode(body);
     }
 
@@ -119,22 +120,25 @@ class Rest {
       final data = await res.stream?.toBytes();
       retBody = String.fromCharCodes(data);
     } else {
-      retBody = _forceUTF8 == true ? utf8.decode(res.bodyBytes) : res.body;
+      retBody = _forceUTF8 ? utf8.decode(res.bodyBytes) : res.body;
     }
 
-    retBody = res.headers['content-type'] == kContentTypeJson
-        ? jsonDecode(retBody)
-        : retBody;
+    if (res.headers[_kContentType]?.startsWith(_kContentTypeJson) == true) {
+      retBody = jsonDecode(retBody);
+    } else {
+      retBody = retBody;
+    }
 
     if (ok) {
       return retBody;
     }
 
-    if (_loggerEnabled) Logger.warn(res.body);
+    if (_loggerEnabled) Logger.info(res.body);
     final error = RestError(
       res.statusCode,
       retBody,
     );
+
     if (_errorCallback != null) {
       try {
         // need request again or not?
@@ -146,6 +150,7 @@ class Rest {
               retryCount: ++retryCount);
         }
       } catch (e) {
+        if (_loggerEnabled) Logger.warn(e.toString());
         throw e;
       }
     }
