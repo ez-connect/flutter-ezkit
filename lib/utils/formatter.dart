@@ -47,14 +47,14 @@ class Formatter {
   }
 
   static String timeFromString(String value, {int timeZone = 7}) {
-    final time = DateTime.tryParse(value);
-    time?.add(Duration(hours: timeZone));
+    var time = DateTime.tryParse(value);
+    time = time?.add(Duration(hours: timeZone));
     return Formatter.time(time);
   }
 
   static String dateFromString(String value, {int timeZone = 7}) {
-    final time = DateTime.tryParse(value);
-    time?.add(Duration(hours: timeZone));
+    var time = DateTime.tryParse(value);
+    time = time?.add(Duration(hours: timeZone));
     return Formatter.date(time);
   }
 
