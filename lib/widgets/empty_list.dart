@@ -12,16 +12,18 @@ class EmptyList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          this.icon,
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(this.description),
-          ),
-        ],
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            this.icon,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(this.description),
+            ),
+          ],
+        ),
       ),
     );
   }
