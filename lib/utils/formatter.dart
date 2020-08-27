@@ -46,6 +46,18 @@ class Formatter {
     return formatter.format(date);
   }
 
+  String timeFromString(String value, {int timeZone = 7}) {
+    final time = DateTime.tryParse(value);
+    time?.add(Duration(hours: timeZone));
+    return Formatter.time(time);
+  }
+
+  String dateFromString(String value, {int timeZone = 7}) {
+    final time = DateTime.tryParse(value);
+    time?.add(Duration(hours: timeZone));
+    return Formatter.date(time);
+  }
+
   static String name(String firstname, String lastname) {
     return '$firstname $lastname';
   }
