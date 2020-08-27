@@ -46,13 +46,13 @@ class Formatter {
     return formatter.format(date);
   }
 
-  String timeFromString(String value, {int timeZone = 7}) {
+  static String timeFromString(String value, {int timeZone = 7}) {
     final time = DateTime.tryParse(value);
     time?.add(Duration(hours: timeZone));
     return Formatter.time(time);
   }
 
-  String dateFromString(String value, {int timeZone = 7}) {
+  static String dateFromString(String value, {int timeZone = 7}) {
     final time = DateTime.tryParse(value);
     time?.add(Duration(hours: timeZone));
     return Formatter.date(time);
