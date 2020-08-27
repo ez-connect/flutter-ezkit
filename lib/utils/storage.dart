@@ -11,11 +11,12 @@ class Storage {
   }
 
   static Future<bool> get ready => _storage.ready;
-  static Map<String, dynamic> getItem(String key) {
+
+  static dynamic getItem(String key) {
     return _storage.getItem(key);
   }
 
-  static Future<void> setItem(String key, Map<String, dynamic> value) {
+  static Future<void> setItem(String key, dynamic value) {
     return _storage.setItem(key, value);
   }
 
