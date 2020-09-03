@@ -1,6 +1,6 @@
 name: ezkit
 description: A collection of usefull things, including routing, util and widgets for Flutter applications
-version: 0.0.1
+version: 0.0.2
 homepage: https://pub.dev/packages/ezkit
 repository: https://github.com/ez-connect/flutter-ezkit
 
@@ -23,10 +23,6 @@ dependencies:
   localstorage: ^3.0.2
   # secure storage
   flutter_secure_storage: ^3.3.3
-
-  # File picker
-  file_picker: ^1.13.3
-  file_picker_web: any
 
   # Share
   share: ^0.6.4+5
