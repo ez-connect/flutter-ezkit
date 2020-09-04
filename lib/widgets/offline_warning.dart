@@ -23,7 +23,11 @@ class OfflineWarning extends StatelessWidget {
             color: Colors.red,
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Row(
-              children: [this.icon, this.child],
+              children: [
+                this.icon,
+                SizedBox(width: 6),
+                this.child,
+              ],
             ),
           ),
         );
