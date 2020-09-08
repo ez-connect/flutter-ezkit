@@ -3,7 +3,12 @@
 import 'package:flutter/foundation.dart';
 
 class Logger {
+  /// Enable logging, default is true in debug mode
   static bool enabled = kDebugMode;
+
+  /// Enable warning & error, default is true.
+  /// Set it to false to disable in release mode.
+  static bool enabledWarn = true;
 
   static void debug(Object object) {
     if (enabled) {
@@ -18,13 +23,13 @@ class Logger {
   }
 
   static void warn(Object object) {
-    if (enabled) {
+    if (enabled || enabledWarn) {
       print('\x1b[33m ${object.toString()}');
     }
   }
 
   static void error(Object object) {
-    if (enabled) {
+    if (enabled || enabledWarn) {
       print('\x1b[31m ${object.toString()}');
     }
   }
