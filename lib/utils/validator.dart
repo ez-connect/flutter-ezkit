@@ -38,7 +38,7 @@ class Validator {
     }
 
     // check phone format
-    final regex = RegExp(r'[0-9]{10}');
+    final regex = RegExp(r'^[0-9]{10}$');
     if (regex.hasMatch(phone)) {
       return null;
     }
