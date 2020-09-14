@@ -5,11 +5,13 @@ import '../utils.dart';
 class PasswordField extends StatefulWidget {
   final String labelText;
   final TextEditingController controller;
+  final String Function(String) validator;
 
   const PasswordField({
     Key key,
     this.labelText,
     this.controller,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -40,7 +42,7 @@ class _PasswordFieldState extends State<PasswordField> {
           },
         ),
       ),
-      validator: Validator.password,
+      validator: this.widget.validator ?? Validator.password,
     );
   }
 }
