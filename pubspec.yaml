@@ -17,15 +17,15 @@ dependencies:
 
   # Network
   http: ^0.12.2
-  connectivity: ^0.4.9
+  connectivity: ^0.4.9+3
   
   # Local storage
   localstorage: ^3.0.2
   # secure storage
-  flutter_secure_storage: ^3.3.3
+  flutter_secure_storage: ^3.3.4
 
   # Share
-  share: ^0.6.4+5
+  share: ^0.6.5+2
 
 dev_dependencies:
   flutter_test:
