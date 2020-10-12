@@ -58,8 +58,11 @@ class Formatter {
     return Formatter.date(time);
   }
 
-  static String name(String firstname, String lastname) {
-    return '$firstname $lastname';
+  static String name(String firstname, String lastname, String locale) {
+    if (firstname == null && lastname == null) {
+      return null;
+    }
+    return '${lastname ?? ''} ${firstname ?? ''}';
   }
 
   static String sentence(String value) {
