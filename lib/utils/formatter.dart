@@ -58,7 +58,7 @@ class Formatter {
     return Formatter.date(time);
   }
 
-  static String name(String firstname, String lastname, String locale) {
+  static String name(String firstname, String lastname) {
     if (firstname == null && lastname == null) {
       return null;
     }
