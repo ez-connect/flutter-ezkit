@@ -34,7 +34,6 @@ class TypographyDemo extends StatelessWidget {
         Text('cardColor', style: TextStyle(color: themeData.cardColor)),
         Text('dividerColor', style: TextStyle(color: themeData.dividerColor)),
         Text('disabledColor', style: TextStyle(color: themeData.disabledColor)),
-        Text('cursorColor', style: TextStyle(color: themeData.cursorColor)),
         Text('errorColor', style: TextStyle(color: themeData.errorColor)),
         Text('focusColor', style: TextStyle(color: themeData.focusColor)),
         Text('highlightColor',

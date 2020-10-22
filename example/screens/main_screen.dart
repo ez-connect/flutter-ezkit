@@ -29,19 +29,19 @@ class MainScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.tab),
-            title: Text('Tab 2'),
+            label: 'Tab 2',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.tab),
-            title: Text('Tab 3'),
+            label: 'Tab 3',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.tab),
-            title: Text('Tab 4'),
+            label: 'Tab 4',
           ),
         ],
       ),
