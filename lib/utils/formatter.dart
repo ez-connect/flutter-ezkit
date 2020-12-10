@@ -19,12 +19,12 @@ class Formatter {
     return formatter.format(value);
   }
 
-  static String number(double value) {
+  static String number([double value, locale = 'vi_VN']) {
     if (value == null) {
       value = 0;
     }
 
-    final formatter = NumberFormat.currency(locale: 'vi_VN');
+    final formatter = NumberFormat('###,000', locale);
     return formatter.format(value.round());
   }
 
