@@ -21,6 +21,17 @@ class Navigation {
   }
 
   @optionalTypeArgs
+  static Future<T> popAndPushNamed<T extends Object, TO extends Object>(
+    BuildContext context,
+    String routeName, {
+    TO result,
+    Object arguments,
+  }) {
+    return navigator.currentState.popAndPushNamed<T, TO>(routeName,
+        arguments: arguments, result: result);
+  }
+
+  @optionalTypeArgs
   static Future<T> pushReplacementNamed<T extends Object, TO extends Object>(
     String routeName, {
     TO result,

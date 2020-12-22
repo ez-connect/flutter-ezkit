@@ -20,7 +20,7 @@ dependencies:
   connectivity: ^2.0.2
 
   # Local storage
-  localstorage: ^3.0.3+6
+  localstorage: ^3.0.3+9
   # Secure storage
   flutter_secure_storage: ^3.3.5
 
