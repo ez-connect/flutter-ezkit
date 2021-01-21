@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 
 final _kAccents =
-    'ÀÁẢÃẠÂẦẤẨẪẬĂẰẮẲẴẶĐÈÉẺẼẸÊỀẾỂỄỆÍÌỈĨỊÒÓỎÕỌÔỒỒỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỮỰỲÝỶỸỴàáảãạâầấẩẫậăằắẳẵặđèéẻẽẹêềếểễệíìỉĩịòóỏõọôồồổỗộơờớởỡợùúủũụưừứữựỳýỷỹỵ'
+    'ÀÁẢÃẠÂẦẤẨẪẬĂẰẮẲẴẶĐÈÉẺẼẸÊỀẾỂỄỆÍÌỈĨỊÒÓỎÕỌÔỒỒỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴàáảãạâầấẩẫậăằắẳẵặđèéẻẽẹêềếểễệíìỉĩịòóỏõọôồồổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ'
         .runes;
 final _kASCII =
-    'AAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUYYYYYaaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuyyyyy'
+    'AAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUuUYYYYYaaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyy'
         .runes;
 
 class SimpleSearchData<T> {
@@ -32,7 +32,7 @@ class SimpleSearch<T> {
       this._data.items.add(e);
       final List<String> texts = [];
       for (final f in fields) {
-        texts.addAll([e[f], ' ', this.normalize(e[f])]);
+        texts.add(this.normalize(e[f]));
       }
       this._data.texts.add(texts.join(' ').toLowerCase());
     }
@@ -41,7 +41,7 @@ class SimpleSearch<T> {
   List<T> search(String value) {
     final List<T> items = [];
     for (int i = 0; i < this._data.texts.length; i++) {
-      if (this._data.texts[i].contains(value.toLowerCase())) {
+      if (this._data.texts[i].contains(this.normalize(value).toLowerCase())) {
         items.add(this._data.items[i]);
       }
     }
