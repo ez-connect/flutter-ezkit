@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 
 final _kAccents =
-    'ÀÁẢÃẠÂẤẨẪẬĂẮẰẲẴẶÃÄÅàáãạâấẩẫậăắằẳẵäåÒÓÔÕÕÖØòóôõöøÈÉẺẼẸÊẾỂỄỆËèéẻẽẹêếểễệëðÇçÐÌÍỈĨỊÎÏìíỉĩịîïÙÚỦŨỤƯỪỨỮỰÛÜùúủũụưừứữựûüÑñŠšŸÿýŽž'
+    'ÀÁẢÃẠÂẦẤẨẪẬĂẰẮẲẴẶĐÈÉẺẼẸÊỀẾỂỄỆÍÌỈĨỊÒÓỎÕỌÔỒỒỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỮỰỲÝỶỸỴàáảãạâầấẩẫậăằắẳẵặđèéẻẽẹêềếểễệíìỉĩịòóỏõọôồồổỗộơờớởỡợùúủũụưừứữựỳýỷỹỵ'
         .runes;
 final _kASCII =
-    'AAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaOOOOOOOooooooEEEEEEEEEEEeeeeeeeeeeedCcDIIIIIIIiiiiiiiUUUUUUUUUUUUuuuuuuuuuuuuNnSsYyyZz'
+    'AAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUYYYYYaaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuyyyyy'
         .runes;
 
 class SimpleSearchData<T> {
@@ -16,7 +16,7 @@ class SimpleSearchData<T> {
 
 class SimpleSearch<T> {
   static Map<String, String> _map = {};
-  SimpleSearchData<T> _data = SimpleSearchData();
+  SimpleSearchData<T> _data;
 
   SimpleSearch(List<T> items, List<String> fields) {
     if (_map.isEmpty) {
@@ -30,11 +30,11 @@ class SimpleSearch<T> {
     this._data = SimpleSearchData(items: [], texts: []);
     for (final dynamic e in items) {
       this._data.items.add(e);
-      String text = '';
+      final List<String> texts = [];
       for (final f in fields) {
-        text += this.normalize(e[f].trim());
+        texts.addAll([e[f], ' ', this.normalize(e[f])]);
       }
-      this._data.texts.add(text.toLowerCase());
+      this._data.texts.add(texts.join(' ').toLowerCase());
     }
   }
 
