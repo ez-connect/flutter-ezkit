@@ -42,7 +42,7 @@ class Formatter {
       return '';
     }
 
-    final formatter = DateFormat('hh:mm:ss', 'vi_VN');
+    final formatter = DateFormat('HH:mm:ss', 'vi_VN');
     return formatter.format(date);
   }
 
