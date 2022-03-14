@@ -5,3 +5,7 @@
 ## 0.0.1
 
 * Collect some useful thing
+
+## 0.0.2
+
+* Upgrade Flutter
