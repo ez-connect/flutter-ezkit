@@ -15,7 +15,7 @@ class ThemeEx {
     return MediaQuery.of(Navigation.currentContext).size;
   }
 
-  static Color hex2Color(String value) {
+  static Color? hex2Color(String? value) {
     if (value == null) return null;
 
     value = value.toUpperCase().replaceAll("#", "");

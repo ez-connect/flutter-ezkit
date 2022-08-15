@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 
 final _kAccents =
     'ÀÁẢÃẠÂẦẤẨẪẬĂẰẮẲẴẶĐÈÉẺẼẸÊỀẾỂỄỆÍÌỈĨỊÒÓỎÕỌÔỒỒỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴàáảãạâầấẩẫậăằắẳẵặđèéẻẽẹêềếểễệíìỉĩịòóỏõọôồồổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ'
@@ -11,12 +10,12 @@ class SimpleSearchData<T> {
   List<T> items;
   List<String> texts;
 
-  SimpleSearchData({@required this.items, this.texts = const []});
+  SimpleSearchData({required this.items, this.texts = const []});
 }
 
 class SimpleSearch<T> {
   static Map<String, String> _map = {};
-  SimpleSearchData<T> _data;
+  late SimpleSearchData<T> _data;
 
   SimpleSearch(List<T> items, List<String> fields) {
     if (_map.isEmpty) {
@@ -52,11 +51,11 @@ class SimpleSearch<T> {
   String normalize(String value) {
     return value.splitMapJoin(
       RegExp(r'[\x00-\x7f]'),
-      onNonMatch: this._onNonMatch,
+      onNonMatch: this._onNonMatch as String Function(String)?,
     );
   }
 
-  String _onNonMatch(String value) {
+  String? _onNonMatch(String value) {
     return _map[value] != null ? _map[value] : value;
   }
 }

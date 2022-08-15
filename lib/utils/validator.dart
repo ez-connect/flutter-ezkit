@@ -1,14 +1,14 @@
 class Validator {
-  static String empty(String label, String value) {
+  static String? empty(String? label, String? value) {
     if (value == null || value.isEmpty) {
-      return '$label cannot be empty';
+      return '$label không được để trống';
     }
     return null;
   }
 
-  static String email(String email) {
+  static String? email(String? email) {
     if (email == null || email.isEmpty) {
-      return 'Email cannot be empty';
+      return 'Email không được để trống';
     }
 
     final regex = RegExp(
@@ -18,31 +18,31 @@ class Validator {
       return null;
     }
 
-    return 'Email wrong';
+    return 'Email sai';
   }
 
-  static String password(String password) {
+  static String? password(String? password) {
     if (password == null || password.isEmpty) {
-      return 'password cannot be empty';
+      return 'Mật khẩu không được để trống';
     }
+   
     return null;
   }
 
-  static String phone(String phone, {bool isRequired = false}) {
+  static String? phone(String? phone,{bool isRequired = false}) {
     if (phone == null || phone.isEmpty) {
-      if (isRequired) {
-        return 'Phone cannot be empty';
-      } else {
-        return null;
+      if(isRequired){
+        return 'Số điện thoại không được để trống';
       }
-    }
-
+       return null; 
+      }
+   
     // check phone format
-    final regex = RegExp(r'^[0-9]{10}$');
+    final regex = RegExp(r'^(84|0[3|5|7|8|9])+([0-9]{8})\b');
     if (regex.hasMatch(phone)) {
       return null;
     }
 
-    return 'Phone wrong';
+    return 'Số điện thoại sai';
   }
 }

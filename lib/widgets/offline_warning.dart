@@ -8,7 +8,7 @@ class OfflineWarning extends StatefulWidget {
   final Icon icon;
   final Widget child;
 
-  const OfflineWarning({Key key, @required this.icon, @required this.child})
+  const OfflineWarning({Key? key, required this.icon, required this.child})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class OfflineWarning extends StatefulWidget {
 }
 
 class _OfflineWarningState extends State<OfflineWarning> {
-  StreamSubscription<ConnectivityResult> _subscription;
+  late StreamSubscription<ConnectivityResult> _subscription;
   bool _visible = false;
 
   @override

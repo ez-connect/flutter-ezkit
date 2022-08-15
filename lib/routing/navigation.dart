@@ -8,53 +8,54 @@ class Navigation {
 
   static get currentContext => navigator.currentContext;
 
-  static jumpToPage(int page) {
-    bottomNav.currentState.jumpToPage(page);
+  // static jumpToPage(int page) {
+  //   bottomNav.currentState!.jumpToPage(page);
+  // }
+
+  @optionalTypeArgs
+  static Future<T?> pushNamed<T extends Object>(
+    String routeName, {
+    Object? arguments,
+  }) {
+    return navigator.currentState!
+        .pushNamed<T>(routeName, arguments: arguments);
   }
 
   @optionalTypeArgs
-  static Future<T> pushNamed<T extends Object>(
+  static Future<T?> popAndPushNamed<T extends Object, TO extends Object>(
     String routeName, {
-    Object arguments,
+    TO? result,
+    Object? arguments,
   }) {
-    return navigator.currentState.pushNamed<T>(routeName, arguments: arguments);
-  }
-
-  @optionalTypeArgs
-  static Future<T> popAndPushNamed<T extends Object, TO extends Object>(
-    String routeName, {
-    TO result,
-    Object arguments,
-  }) {
-    return navigator.currentState.popAndPushNamed<T, TO>(routeName,
+    return navigator.currentState!.popAndPushNamed<T, TO>(routeName,
         arguments: arguments, result: result);
   }
 
   @optionalTypeArgs
-  static Future<T> pushReplacementNamed<T extends Object, TO extends Object>(
+  static Future<T?> pushReplacementNamed<T extends Object, TO extends Object>(
     String routeName, {
-    TO result,
-    Object arguments,
+    TO? result,
+    Object? arguments,
   }) {
-    return navigator.currentState.pushReplacementNamed<T, TO>(routeName,
+    return navigator.currentState!.pushReplacementNamed<T, TO>(routeName,
         result: result, arguments: arguments);
   }
 
   static Future<void> pushNamedAndRemoveUntil(
     String newRouteName,
     RoutePredicate predicate, {
-    Object arguments,
+    Object? arguments,
   }) {
-    return navigator.currentState
+    return navigator.currentState!
         .pushNamedAndRemoveUntil(newRouteName, predicate, arguments: arguments);
   }
 
   @optionalTypeArgs
-  static void pop<T extends Object>([T result]) {
-    navigator.currentState.pop(result);
+  static void pop<T extends Object>([T? result]) {
+    navigator.currentState!.pop(result);
   }
 
   static void popUntil(RoutePredicate predicate) {
-    navigator.currentState.popUntil(predicate);
+    navigator.currentState!.popUntil(predicate);
   }
 }

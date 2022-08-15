@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import '../utils.dart';
 
 class PasswordField extends StatefulWidget {
-  final String labelText;
-  final TextEditingController controller;
-  final String Function(String) validator;
-
+  final String? labelText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
   const PasswordField({
-    Key key,
+    Key? key,
     this.labelText,
     this.controller,
     this.validator,
@@ -28,7 +27,12 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: this._obscureText,
       keyboardType: TextInputType.visiblePassword,
       decoration: InputDecoration(
-        labelText: this.widget.labelText,
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        errorMaxLines: 2,
         suffix: InkWell(
           child: Icon(
             this._obscureText ? Icons.visibility : Icons.visibility_off,
