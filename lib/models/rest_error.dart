@@ -4,15 +4,16 @@ import 'dart:convert';
 /// Call [Rest.setValidateStatus] to use a custom validate,
 /// default `statusCode == 200 || statusCode == 202`
 class RestError {
-  int statusCode;
+  int? statusCode;
   dynamic body;
-
-  RestError(this.statusCode, this.body);
+  String? path;
+  RestError(this.statusCode, this.body, this.path);
 
   Map<String, dynamic> toMap() {
     return {
       'statusCode': statusCode,
       'body': body,
+      'path': path,
     };
   }
 
@@ -21,8 +22,10 @@ class RestError {
   }
 
   factory RestError.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+    if (map == null) {
+      NullThrownError();
+    }
 
-    return RestError(map['statusCode'], map['name']);
+    return RestError(map['statusCode'], map['name'], map['path']);
   }
 }

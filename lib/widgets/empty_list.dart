@@ -5,9 +5,9 @@ class EmptyList extends StatelessWidget {
   final String description;
 
   const EmptyList({
-    Key key,
-    @required this.icon,
-    @required this.description,
+    Key? key,
+    required this.icon,
+    required this.description,
   }) : super(key: key);
 
   @override

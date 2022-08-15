@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class Formatter {
-  static String currency(double value, [String locale = 'vi_VN']) {
+  static String currency(double? value, [String locale = 'vi_VN']) {
     if (value == null) {
       value = 0;
     }
@@ -9,8 +9,15 @@ class Formatter {
     final formatter = NumberFormat.currency(locale: locale, symbol: '₫');
     return formatter.format(value.round());
   }
+  static String percent(double? value, [String locale = 'vi_VN']) {
+    if (value == null) {
+      value = 0;
+    }
 
-  static String rating(double value, [String locale = 'vi_VN']) {
+    final formatter = NumberFormat.currency(locale: locale, symbol: '%');
+    return formatter.format(value.round());
+  }
+  static String rating(double? value, [String locale = 'vi_VN']) {
     if (value == null) {
       return '0';
     }
@@ -19,25 +26,35 @@ class Formatter {
     return formatter.format(value);
   }
 
-  static String number([double value, locale = 'vi_VN']) {
+  static String number([double? value, locale = 'vi_VN']) {
     if (value == null) {
       value = 0;
     }
 
-    final formatter = NumberFormat('###,000', locale);
+    final formatter = NumberFormat('###,###.##', locale);
     return formatter.format(value.round());
   }
 
-  static String date(DateTime date) {
+  static String date(DateTime? date) {
     if (date == null) {
       return '';
     }
 
-    final formatter = DateFormat('dd/MM/yyyy', 'vi_VN');
+    final formatter = DateFormat('dd-MM-yyyy', 'vi_VN');
+
     return formatter.format(date);
   }
 
-  static String time(DateTime date) {
+  static String dateSignUp(DateTime? date) {
+    if (date == null) {
+      return '';
+    }
+
+    final formatter = DateFormat('yyyy-MM-dd', 'vi_VN');
+    return formatter.format(date);
+  }
+
+  static String time(DateTime? date) {
     if (date == null) {
       return '';
     }
@@ -58,14 +75,14 @@ class Formatter {
     return Formatter.date(time);
   }
 
-  static String name(String firstname, String lastname) {
+  static String? name(String? firstname, String? lastname) {
     if (firstname == null && lastname == null) {
       return null;
     }
-    return '${lastname ?? ''} ${firstname ?? ''}';
+    return '$lastname $firstname';
   }
 
-  static String sentence(String value) {
+  static String? sentence(String? value) {
     if (value == null || value.length == 0) {
       return value;
     }

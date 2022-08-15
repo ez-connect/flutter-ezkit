@@ -2,10 +2,10 @@ name: ezkit
 description: A collection of usefull things, including routing, util and widgets for Flutter applications
 version: 0.0.2
 homepage: https://pub.dev/packages/ezkit
-repository: https://github.com/ez-connect/flutter-ezkit
+repository: https://github.com/anhhieu21/flutter-ezkit
 
 environment:
-  sdk: ">=2.16.1 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:

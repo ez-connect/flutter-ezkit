@@ -15,7 +15,7 @@ class App extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         // remove forcus of textfield to close keyboard.
-        primaryFocus.unfocus();
+        primaryFocus?.unfocus();
       },
       child: MaterialApp(
         title: 'Flutter Demo',

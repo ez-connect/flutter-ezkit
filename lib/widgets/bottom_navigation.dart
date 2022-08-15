@@ -7,8 +7,8 @@ class BottomNavigation extends StatefulWidget {
   final bool showUnselectedLabels;
 
   BottomNavigation({
-    Key key,
-    @required this.controller,
+    Key? key,
+    required this.controller,
     this.items = const [],
     this.showSelectedLabels = true,
     this.showUnselectedLabels = true,

@@ -16,7 +16,7 @@ class Logger {
     }
   }
 
-  static void info(Object object) {
+  static void info(Object? object) {
     if (enabled) {
       print('\x1b[35m ${object.toString()}');
     }

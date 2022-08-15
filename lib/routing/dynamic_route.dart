@@ -5,8 +5,8 @@ import '../utils.dart';
 class DynamicRoute {
   static var _routesMapping = Map<DynamicRoute, Widget Function(dynamic)>();
   final String route;
-  final _variable = Map<String, String>(); // <name, type>
-  RegExp _regex;
+  final _variable = Map<String?, String>(); // <name, type>
+  late RegExp _regex;
 
   DynamicRoute(this.route) {
     var temp = this.route.replaceAll(RegExp(r'\/'), '\\/');
@@ -22,9 +22,9 @@ class DynamicRoute {
     return (uri.path == this.route || this._regex.hasMatch(uri.path));
   }
 
-  Map<String, dynamic> _getArguments(String route) {
+  Map<String?, dynamic> _getArguments(String route) {
     final uri = Uri.parse(route);
-    final args = Map<String, dynamic>();
+    final args = Map<String?, dynamic>();
     this._regex.allMatches(uri.path).forEach((element) {
       for (int i = 0; i < element.groupCount && i < _variable.length; i++) {
         dynamic value = element.group(i + 1);
@@ -48,18 +48,18 @@ class DynamicRoute {
     return args;
   }
 
-  RouteSettings getSetting(String route, Object args) {
+  RouteSettings getSetting(String? route, Object? args) {
     if (args != null && args is Map<String, dynamic> == false) {
       return RouteSettings(name: route, arguments: args);
     }
 
     // need rename
-    final uri = Uri.parse(route);
-    var name = route;
-    final arguments = Map<String, dynamic>()..addAll(args ?? {});
+    final uri = Uri.parse(route!);
+    String? name = route;
+    final arguments = Map<String?, dynamic>()..addAll(args as Map<String?, dynamic>? ?? {});
     if (uri.path == this.route) {
       arguments.forEach((key, value) {
-        name = name.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
+        name = name!.replaceAll(RegExp(':$key(?:\\([\\w]+\\)|)'), '$value');
       });
     }
     arguments.addAll(_getArguments(route));
@@ -70,17 +70,17 @@ class DynamicRoute {
     _routesMapping = routesMapping;
   }
 
-  static DynamicRoute findRoute(String route) {
+  static DynamicRoute? findRoute(String? route) {
     for (int i = 0; i < _routesMapping.keys.length; i++) {
       final key = _routesMapping.keys.elementAt(i);
-      if (key.match(route)) {
+      if (key.match(route!)) {
         return key;
       }
     }
     return null;
   }
 
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     Logger.info('Generate route: ${settings.name}');
     final arguments = settings.arguments;
     final route = findRoute(settings.name);
@@ -88,7 +88,7 @@ class DynamicRoute {
     if (route != null) {
       final newSettings = route.getSetting(settings.name, arguments);
       return MaterialPageRoute(
-        builder: (context) => _routesMapping[route](newSettings.arguments),
+        builder: (context) => _routesMapping[route]!(newSettings.arguments),
         settings: newSettings,
       );
     } else {

@@ -3,9 +3,9 @@ import 'package:localstorage/localstorage.dart';
 const _kFilename = 'data';
 
 class Storage {
-  static LocalStorage _storage;
+  static late LocalStorage _storage;
 
-  static Future<void> init([String filename = _kFilename, String path]) async {
+  static Future<void> init([String filename = _kFilename, String? path]) async {
     _storage = LocalStorage(filename, path);
     await _storage.ready;
   }
